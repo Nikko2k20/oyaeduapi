@@ -7,7 +7,8 @@ const handleRegister = (req, res, db, bcrypt) => {
   db.transaction(trx => {
     trx.insert({
       hash: hash,
-      email: email
+      email: email,
+      Api_Token: Math.random(60)
     })
       .into('login')
       .returning('email')
