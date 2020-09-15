@@ -12,16 +12,16 @@ const handleRegister = (req, res, db, bcrypt) => {
       api_token: api_token
     })
       .into('login')
-      .returning('email')
-      .then(loginEmail => {
+      .returning('id')
+      .then(userid => {
         return trx('users')
           .returning('*')
           .insert({
             email: loginEmail[0],
             name: name,
             joined_date: new Date(),
+            user_id: userid,
             api_token: api_token
-
           })
           .then(user => {
             res.json(user[0]);
