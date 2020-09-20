@@ -1,7 +1,10 @@
+const (hash) = require('./Helper');
+const Session = require('./session');
+
 const handleSignin = (db, bcrypt) => (req, res) => {
   const { email, password } = req.body;
   if (!email || !password) {
-    return res.status(400).json('incorrect form submission');
+    return res.status(400).json('i  ncorrect form submission');
   }
   db.select('email', 'hash').from('login')
     .where('email', '=', email)
@@ -10,7 +13,14 @@ const handleSignin = (db, bcrypt) => (req, res) => {
       if (isValid) {
         return db.select('*').from('users')
           .where('email', '=', email)
-          .then(user => {
+          .then(() => {
+            const session = new Session({ email });
+            const sessionString = session.toString;
+            res.cookie('sessionString', sessionString, {
+              expire: Date.now() + 3600000,
+              httpOnly: true,
+              secure: true
+            });
             res.json(user[0])
           })
           .catch(err => res.status(400).json('unable to get user'))
