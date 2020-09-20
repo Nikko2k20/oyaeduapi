@@ -1,15 +1,15 @@
 const { hash } = require('./Helper');
 const Session = require('./session');
 
-const handleSignin = (db, bcrypt) => (req, res) => {
+const handleSignin = (db, hash) => (req, res) => {
   const { email, password } = req.body;
   if (!email || !password) {
     return res.status(400).json('i  ncorrect form submission');
   }
-  db.select('email', 'hash').from('login')
+  db.select('email', 'hash as hashpwd').from('login')
     .where('email', '=', email)
     .then(data => {
-      const isValid = bcrypt.compareSync(password, data[0].hash);
+      const isValid = hash.compareSync(password, data[0].hashpwd);
       if (isValid) {
         return db.select('*').from('users')
           .where('email', '=', email)
@@ -21,7 +21,7 @@ const handleSignin = (db, bcrypt) => (req, res) => {
               httpOnly: true,
               secure: true
             });
-            res.json(user[0])
+            res.json({ message: 'success' });
           })
           .catch(err => res.status(400).json('unable to get user'))
       } else {

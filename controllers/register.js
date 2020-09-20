@@ -1,13 +1,16 @@
-const handleRegister = (req, res, db, bcrypt) => {
+const { hashcrypt } = require('./Helper');
+const Session = require('./session');
+
+const handleRegister = (req, res, db, hash) => {
   const { email, name, password } = req.body;
   if (!email || !name || !password) {
     return res.status(400).json('incorrect form submission');
   }
-  const hash = bcrypt.hashSync(password);
-  const api_token = bcrypt.hashSync(Math.random(60));
+  const hashcrypt = hash.hashSync(password);
+  const api_token = hash.hashSync(Math.random(60));
   db.transaction(trx => {
     trx.insert({
-      hash: hash,
+      hash: hashcrypt,
       email: email,
       api_token: api_token
     })
@@ -23,8 +26,15 @@ const handleRegister = (req, res, db, bcrypt) => {
             user_id: userid[0],
             api_token: api_token
           })
-          .then(user => {
-            res.json(user[0]);
+          .then(() => {
+            const session = new Session({ email });
+            const sessionString = session.toString;
+            res.cookie('sessionString', sessionString, {
+              expire: Date.now() + 3600000,
+              httpOnly: true,
+              secure: true
+            });
+            res.json({ message: 'success' });
           })
       })
       .then(trx.commit)
