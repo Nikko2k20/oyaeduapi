@@ -24,7 +24,8 @@ const handleRegister = (req, res, db, hash) => {
             name: name,
             joined_date: new Date(),
             user_id: userid[0],
-            api_token: api_token
+            api_token: api_token,
+            sessionid: ''
           })
           .then(() => {
             setSession({ email, res });
