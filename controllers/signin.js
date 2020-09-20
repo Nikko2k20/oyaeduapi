@@ -1,4 +1,4 @@
-const (hash) = require('./Helper');
+const { hash } = require('./Helper');
 const Session = require('./session');
 
 const handleSignin = (db, bcrypt) => (req, res) => {
