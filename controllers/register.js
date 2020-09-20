@@ -27,13 +27,7 @@ const handleRegister = (req, res, db, hash) => {
             api_token: api_token
           })
           .then(() => {
-            const session = new Session({ email });
-            const sessionString = session.toString;
-            res.cookie('sessionString', sessionString, {
-              expire: Date.now() + 3600000,
-              httpOnly: true,
-              secure: true
-            });
+            setSession({ email, res });
             res.json({ message: 'success' });
           })
       })

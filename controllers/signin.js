@@ -1,10 +1,10 @@
 const { hash } = require('./Helper');
-const Session = require('./session');
+const { setSession } = require('./HelperSession');
 
 const handleSignin = (db, hash) => (req, res) => {
   const { email, password } = req.body;
   if (!email || !password) {
-    return res.status(400).json('i  ncorrect form submission');
+    return res.status(400).json('incorrect form submission');
   }
   db.select('email', 'hash as hashpwd').from('login')
     .where('email', '=', email)
@@ -14,16 +14,14 @@ const handleSignin = (db, hash) => (req, res) => {
         return db.select('*').from('users')
           .where('email', '=', email)
           .then(() => {
-            const session = new Session({ email });
-            const sessionString = session.toString;
-            res.cookie('sessionString', sessionString, {
-              expire: Date.now() + 3600000,
-              httpOnly: true,
-              secure: true
-            });
-            res.json({ message: 'success' });
+            return setSession({ email, res });
+
           })
-          .catch(err => res.status(400).json('unable to get user'))
+          .then(({ message }) => {
+            res.json({ message });
+          })
+          .catch(error => next(error));
+
       } else {
         res.status(400).json('wrong credentials')
       }
