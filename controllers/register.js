@@ -1,4 +1,4 @@
-const { hashcrypt } = require('./Helper');
+const { hash } = require('./Helper');
 const Session = require('./session');
 
 const handleRegister = (req, res, db, hash) => {
@@ -6,11 +6,11 @@ const handleRegister = (req, res, db, hash) => {
   if (!email || !name || !password) {
     return res.status(400).json('incorrect form submission');
   }
-  const hashcrypt = hash.hashSync(password);
+  const hash = hash.hashSync(password);
   const api_token = hash.hashSync(Math.random(60));
   db.transaction(trx => {
     trx.insert({
-      hash: hashcrypt,
+      hash: hash,
       email: email,
       api_token: api_token
     })
