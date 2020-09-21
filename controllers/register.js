@@ -1,17 +1,13 @@
-const { hash2 } = require('./Helper');
-const Session = require('./session');
-
-const handleRegister = (req, res, db, hash) => {
+const handleRegister = (req, res, db, bcrypt) => {
   const { email, name, password } = req.body;
   if (!email || !name || !password) {
     return res.status(400).json('incorrect form submission');
   }
-  const hash2 = hash2.hashSync(password);
-  const api_token = hash.hashSync(Math.random(60));
+  const hash = bcrypt.hashSync(password);
+  const api_token = bcrypt.hashSync(Math.random(60));
   db.transaction(trx => {
-
     trx.insert({
-      hash: hash2,
+      hash: hash,
       email: email,
       api_token: api_token
     })
@@ -25,19 +21,13 @@ const handleRegister = (req, res, db, hash) => {
             name: name,
             joined_date: new Date(),
             user_id: userid[0],
-            api_token: api_token,
-            sessionid: ''
+            api_token: api_token
           })
-          .then(() => {
-
-            return setSession({ email, res });
-          })
-          //.then(trx.commit)
-          .then(({ message }) => {
-            res.json({ message: 'success' });
+          .then(user => {
+            res.json(user[0]);
           })
       })
-
+      .then(trx.commit)
       .catch(trx.rollback)
   })
     .catch(err => res.status(400).json('unable to register'))
