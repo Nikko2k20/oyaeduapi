@@ -28,11 +28,11 @@ const handleRegister = (req, res, db, hash) => {
             sessionid: ''
           })
           .then(() => {
-            setSession({ email, res });
-            res.json({ message: 'success' });
+            return setSession({ email, res });
           })
       })
-      .then(trx.commit)
+      //.then(trx.commit)
+      .then(({ message }) => { })
       .catch(trx.rollback)
   })
     .catch(err => res.status(400).json('unable to register'))
