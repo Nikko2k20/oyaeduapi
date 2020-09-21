@@ -31,9 +31,10 @@ const handleRegister = (req, res, db, hash) => {
             res.json({ message: 'success' });
             //return setSession({ email, res });
           })
+          //.then(trx.commit)
+          .then(({ message }) => { })
       })
-      //.then(trx.commit)
-      .then(({ message }) => { })
+
       .catch(trx.rollback)
   })
     .catch(err => res.status(400).json('unable to register'))
