@@ -5,7 +5,8 @@ class AccountTable {
     static updateSessionId(sessionId, email) {
 
         return new Promise((resolve, reject){
-            pool.queryBuilder(
+
+            pool.query(
 
                 'UPDATE login SET "sessionid" = $1 WHERE "email"= $2 ',
                 [sessionId, email],
