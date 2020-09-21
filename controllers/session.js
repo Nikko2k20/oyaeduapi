@@ -1,4 +1,4 @@
-const { uuid } = require('uuidv4');
+const { v4: uuid_v4 } = require('uuid');
 const { hash } = require('./Helper');
 
 const SEPARATOR = '|';
@@ -7,7 +7,7 @@ const SEPARATOR = '|';
 class Session {
     constructor({ email }) {
         this.email = email;
-        this.id = uuid();
+        this.id = uuid_v4();
     }
 
     toString() {

@@ -4,7 +4,7 @@ class AccountTable {
 
     static updateSessionId(sessionId, email) {
 
-        return new Promise((resolve, reject){
+        return new Promise((resolve, reject) => {
 
             pool.query(
 
