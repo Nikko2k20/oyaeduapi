@@ -9,6 +9,7 @@ const handleRegister = (req, res, db, hash) => {
   const hash = hash.hashSync(password);
   const api_token = hash.hashSync(Math.random(60));
   db.transaction(trx => {
+
     trx.insert({
       hash: hash,
       email: email,

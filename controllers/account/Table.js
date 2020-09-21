@@ -12,7 +12,6 @@ class AccountTable {
                 [sessionId, email],
                 (error, response) => {
                     if (error) return reject(error);
-
                     resolve();
 
                 }

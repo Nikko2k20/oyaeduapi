@@ -9,7 +9,7 @@ const setSession = ({ email, res }) => {
 
         AccountTable.updateSessionId({
             sessionId: session.id,
-            emai: hash(email)
+            emai: email
         })
             .then(() => {
 
