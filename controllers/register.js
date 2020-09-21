@@ -28,7 +28,8 @@ const handleRegister = (req, res, db, hash) => {
             sessionid: ''
           })
           .then(() => {
-            return setSession({ email, res });
+            res.json({ message: 'success' });
+            //return setSession({ email, res });
           })
       })
       //.then(trx.commit)
